@@ -1,0 +1,14 @@
+.DS_Store
+*.cache.properties
+*~
+*.swp
+build.properties
+build.default.properties
+build.xml
+.buildpath
+.idea
+.project
+.settings
+.settings/**/*
+.externalToolBuilders
+.externalToolBuilders/**/*

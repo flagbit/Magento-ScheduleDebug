@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Flagbit_ScheduleDebug>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Aoe_Scheduler />
+            </depends>
+        </Flagbit_ScheduleDebug>
+    </modules>
+</config>

@@ -24,7 +24,9 @@ class Flagbit_ScheduleDebug_Model_Action_Before_Cron extends Flagbit_ScheduleDeb
                 /** @var Aoe_Scheduler_Model_Schedule $schedule */
                 Mage::log(
                     sprintf('BEFORE: %s there was %d price differences on: %s',
-                        $schedule->getJobCode(), count($result), $store)
+                        $schedule->getJobCode(), count($result), $store),
+                    null,
+                    'cron.log'
                 );
             }
         }

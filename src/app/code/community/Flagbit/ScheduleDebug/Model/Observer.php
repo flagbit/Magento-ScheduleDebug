@@ -119,4 +119,47 @@ class Flagbit_ScheduleDebug_Model_Observer extends Mage_Core_Model_Abstract {
         $actions = Mage::getConfig()->getNode('default/flagbit_scheduledebug/'.$event.'_actions');
         return explode(',', $actions);
     }
+
+
+    public function runMipAxaptaProductBeforeSave($observer) {
+        $conn = $this->_getDefaultConnection();
+        /** @var Mage_Catalog_Model_Product $product */
+        $product = $observer->getData('product');
+
+        $result = Mage::helper('flagbit_scheduledebug')
+            ->getFlatProducts($conn, $product);
+
+        foreach($result as $store => $prod) {
+            if($prod['price'] != $product->getPrice()) {
+
+                Mage::log(
+                    sprintf('BEFORE: PRICE = %d and FLAT PRICE = %d on: %s UPDATED: %s',
+                        $product->getPrice(), $prod['price'], $store, $product->getUpdatedAt()),
+                    null,
+                    'axapta_debug.log'
+                );
+            }
+        }
+    }
+
+    public function runMipAxaptaProductAfterSave($observer) {
+        $conn = $this->_getDefaultConnection();
+        /** @var Mage_Catalog_Model_Product $product */
+        $product = $observer->getData('product');
+
+        $result = Mage::helper('flagbit_scheduledebug')
+            ->getFlatProducts($conn, $product);
+
+        foreach($result as $store => $prod) {
+            if($prod['price'] != $product->getPrice()) {
+
+                Mage::log(
+                    sprintf('AFTER: PRICE = %d and FLAT PRICE = %d on: %s UPDATED: %s',
+                        $product->getPrice(), $prod['price'], $store, $product->getUpdatedAt()),
+                    null,
+                    'axapta_debug.log'
+                );
+            }
+        }
+    }
 }

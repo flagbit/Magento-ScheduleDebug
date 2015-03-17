@@ -24,7 +24,10 @@ class Flagbit_ScheduleDebug_Helper_Data extends Mage_Core_Helper_Abstract
             $flatTableName = Mage::getResourceModel('catalog/product_flat')->getFlatTableName($storeId);
             $query = sprintf("
                 SELECT
-                    e . *,
+                    e.entity_id,
+                    e.sku,
+                    e.type_id,
+                    e.updated_at,
                     at_price.value AS price,
                     cpf.price AS flat_price
                 FROM
@@ -35,11 +38,36 @@ class Flagbit_ScheduleDebug_Helper_Data extends Mage_Core_Helper_Abstract
                         AND (at_price.store_id = %d)
                         INNER JOIN
                     %s AS cpf ON (cpf.entity_id = e.entity_id)
-                WHERE at_price.value != cpf.price
-                ORDER BY e.entity_id
+                WHERE
+                    at_price.value <> cpf.price
+                ORDER BY e.updated_at DESC;
             ", $storeId, $flatTableName);
 
             $result[$storeVal->getCode().':'.$storeId] = $connection->fetchAll($query);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Hit database to get flat prices
+     *
+     * @param Varien_Db_Adapter_Interface $connection
+     * @param Mage_Catalog_Model_Product $product
+     * @return array
+     */
+    public function getFlatProducts($connection, $product) {
+
+        $allStores = Mage::app()->getStores();
+        $result = array();
+        // raw database query, we can do it better :P
+        foreach ($allStores as $storeId => $storeVal)
+        {
+            /** @var Mage_Catalog_Model_Resource_Product_Flat $flatTableName */
+            $flatTableName = Mage::getResourceModel('catalog/product_flat')->getFlatTableName($storeId);
+            $query = sprintf("SELECT * FROM %s  WHERE entity_id = %d", $flatTableName, $product->getId());
+
+            $result[$storeVal->getCode().':'.$storeId] = $connection->fetchRow($query);
         }
 
         return $result;

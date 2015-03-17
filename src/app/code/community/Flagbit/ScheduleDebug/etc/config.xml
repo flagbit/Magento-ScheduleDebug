@@ -62,6 +62,23 @@
                     </flagbit_scheduledebug>
                 </observers>
             </cron_after_success>
+            <!-- Listening others custom events-->
+            <mip_axapta_product_before_save>
+                <observers>
+                    <flagbit_scheduledebug>
+                        <class>flagbit_scheduledebug/observer</class>
+                        <method>runMipAxaptaProductBeforeSave</method>
+                    </flagbit_scheduledebug>
+                </observers>
+            </mip_axapta_product_before_save>
+            <mip_axapta_product_after_save>
+                <observers>
+                    <flagbit_scheduledebug>
+                        <class>flagbit_scheduledebug/observer</class>
+                        <method>runMipAxaptaProductAfterSave</method>
+                    </flagbit_scheduledebug>
+                </observers>
+            </mip_axapta_product_after_save>
         </events>
     </global>
     <default>
